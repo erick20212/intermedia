@@ -1,0 +1,86 @@
+<app-siderbar></app-siderbar>
+<p-toast></p-toast>
+
+<p-card header="Plan de Carrera">
+  <p class="m-0">
+    Información de los planes de carrera aquí.
+  </p>
+</p-card>
+
+<!-- Toolbar con botón para crear un nuevo Plan de Carrera -->
+<p-toolbar>
+  <div class="p-toolbar-group-left">
+    <button pButton type="button" label="Nuevo Plan de Carrera" icon="pi pi-plus" class="p-mr-2" (click)="openNew()"></button>
+  </div>
+</p-toolbar>
+
+<p-card header="Listar Plan de Carrera">
+  <p-table *ngIf="plancarreras && plancarreras.length > 0" [value]="plancarreras" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Estado</th>
+        <th>Carrera</th>
+        <th>Plan</th>
+        <th style="width: 8rem">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-plancarrera>
+      <tr>
+        <td>{{ plancarrera.id }}</td>
+        <td>{{ plancarrera.estado }}</td>
+        <td>{{ plancarrera.carrera?.nombre }}</td>
+        <td>{{ plancarrera.plan?.nombre }}</td>
+        <td>
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editPlancarrera(plancarrera)"></button>
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deletePlancarrera(plancarrera)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Mensaje si no hay planes de carrera -->
+  <p *ngIf="plancarreras.length === 0">No hay planes de carrera para mostrar.</p>
+</p-card>
+
+<!-- Diálogo para crear/editar plan de carrera -->
+<p-dialog [(visible)]="plancarreraDialog" [modal]="true" [style]="{width: '70vw', height: '70vh', 'min-height': '400px'}" header="Detalles del Plan de Carrera" [closable]="false">
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="estado">Estado</label>
+      <input id="estado" type="text" pInputText [(ngModel)]="plancarrera.estado" required />
+    </div>
+
+    <div class="p-field">
+      <label for="carrera">Carrera</label>
+      <p-dropdown 
+        id="carrera" 
+        [(ngModel)]="plancarrera.carrera" 
+        [options]="carreras" 
+        optionLabel="nombre" 
+        filter="true"  
+        placeholder="Selecciona Carrera">
+      </p-dropdown>
+    </div>
+
+    <div class="p-field">
+      <label for="plan">Plan</label>
+      <p-dropdown 
+        id="plan" 
+        [(ngModel)]="plancarrera.plan" 
+        [options]="planes" 
+        optionLabel="nombre" 
+        filter="true"  
+        placeholder="Selecciona Plan">
+      </p-dropdown>
+    </div>
+  </div>
+
+  <p-footer>
+    <button pButton type="button" label="Guardar" icon="pi pi-check" (click)="savePlancarrera()"></button>
+    <button pButton type="button" label="Cancelar" icon="pi pi-times" class="p-button-secondary" (click)="hideDialog()"></button>
+  </p-footer>
+</p-dialog>
+
+<!-- Confirmación de eliminación -->
+<p-confirmDialog></p-confirmDialog>

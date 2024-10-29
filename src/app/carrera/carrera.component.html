@@ -1,0 +1,65 @@
+<app-siderbar></app-siderbar>
+<p-toast></p-toast>
+
+<p-card header="Carrera">
+  <p class="m-0">
+    Información de la carrera aquí.
+  </p>
+</p-card>
+
+<!-- Toolbar con botón para crear una nueva Carrera -->
+<p-toolbar>
+  <div class="p-toolbar-group-left">
+    <button pButton type="button" label="Nueva Carrera" icon="pi pi-plus" class="p-mr-2" (click)="openNew()"></button>
+  </div>
+</p-toolbar>
+
+<p-card header="Listar Carreras">
+  <p-table *ngIf="carreras && carreras.length > 0" [value]="carreras" [tableStyle]="{ 'min-width': '50rem' }">
+    <ng-template pTemplate="header">
+      <tr>
+        <th>ID</th>
+        <th>Estado</th>
+        <th>Nombre</th>
+        <th style="width: 8rem">Acciones</th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-carrera>
+      <tr>
+        <td>{{ carrera.id }}</td>
+        <td>{{ carrera.estado }}</td>
+        <td>{{ carrera.nombre }}</td>
+        <td>
+          <button pButton icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editCarrera(carrera)"></button>
+          <button pButton icon="pi pi-trash" class="p-button-rounded p-button-danger" (click)="deleteCarrera(carrera)"></button>
+        </td>
+      </tr>
+    </ng-template>
+  </p-table>
+
+  <!-- Mensaje si no hay carreras -->
+  <p *ngIf="carreras.length === 0">No hay carreras para mostrar.</p>
+</p-card>
+
+<!-- Diálogo para crear/editar carrera -->
+<p-dialog [(visible)]="carreraDialog" [modal]="true" [style]="{width: '50vw'}" header="Detalles de la Carrera" [closable]="false">
+  <div class="p-fluid">
+    <div class="p-field">
+      <label for="estado">Estado</label>
+      <input id="estado" type="text" pInputText [(ngModel)]="carrera.estado" required />
+    </div>
+
+    <div class="p-field">
+      <label for="nombre">Nombre</label>
+      <input id="nombre" type="text" pInputText [(ngModel)]="carrera.nombre" required />
+    </div>
+  </div>
+
+  <p-footer>
+    <button pButton type="button" label="Guardar" icon="pi pi-check" (click)="saveCarrera()"></button>
+    <button pButton type="button" label="Cancelar" icon="pi pi-times" class="p-button-secondary" (click)="hideDialog()"></button>
+  </p-footer>
+</p-dialog>
+
+<!-- Confirmación de eliminación -->
+<p-confirmDialog></p-confirmDialog>
